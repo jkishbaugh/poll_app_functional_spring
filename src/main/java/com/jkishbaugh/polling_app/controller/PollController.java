@@ -2,16 +2,12 @@ package com.jkishbaugh.polling_app.controller;
 
 import com.jkishbaugh.polling_app.model.Poll;
 import com.jkishbaugh.polling_app.payload.*;
-import com.jkishbaugh.polling_app.repository.PollRepository;
-import com.jkishbaugh.polling_app.repository.UserRepository;
-import com.jkishbaugh.polling_app.repository.VoteRepository;
 import com.jkishbaugh.polling_app.security.CurrentUser;
 import com.jkishbaugh.polling_app.security.UserPrincipal;
 import com.jkishbaugh.polling_app.services.PollService;
 import com.jkishbaugh.polling_app.utils.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -20,21 +16,17 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 
-@RestController
+
 @RequestMapping("/api/polls")
 public class PollController {
-
-    @Autowired
-    private PollRepository pollRepository;
-
-    @Autowired
-    private VoteRepository voteRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private PollService pollService;
+
+    public PollController(PollService pollService) {
+        this.pollService = pollService;
+    }
+
+
+
 
     private static final Logger logger = LoggerFactory.getLogger(PollController.class);
 
@@ -66,7 +58,6 @@ public class PollController {
     }
 
     @PostMapping("/{pollId}/votes")
-    @PreAuthorize("hasRole('USER')")
     public PollResponse castVote(@CurrentUser UserPrincipal currentUser,
                                  @PathVariable Long pollId,
                                  @Valid @RequestBody VoteRequest voteRequest) {

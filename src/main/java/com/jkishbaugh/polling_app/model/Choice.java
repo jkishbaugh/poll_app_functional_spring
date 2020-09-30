@@ -1,6 +1,5 @@
 package com.jkishbaugh.polling_app.model;
 
-import com.sun.xml.fastinfoset.tools.XML_SAX_StAX_FI;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;

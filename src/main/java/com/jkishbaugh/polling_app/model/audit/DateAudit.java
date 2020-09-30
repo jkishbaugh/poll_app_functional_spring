@@ -20,18 +20,18 @@ import java.time.Instant;
 public abstract class DateAudit implements Serializable {
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    private Instant createAt;
+    private Instant createdAt;
 
     @LastModifiedDate
     @Column(nullable=false)
     private Instant updatedAt;
 
     public Instant getCreateAt() {
-        return createAt;
+        return createdAt;
     }
 
     public void setCreateAt(Instant createAt) {
-        this.createAt = createAt;
+        this.createdAt = createAt;
     }
 
     public Instant getUpdatedAt() {

@@ -1,27 +1,33 @@
 package com.jkishbaugh.polling_app;
 
+import com.jkishbaugh.polling_app.controller.PollController;
+import com.jkishbaugh.polling_app.repository.PollRepository;
+import com.jkishbaugh.polling_app.services.PollService;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
+import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.support.GenericApplicationContext;
 
-import javax.annotation.PostConstruct;
-import java.util.TimeZone;
 
-@SpringBootApplication
-@EntityScan(basePackageClasses = {
-        PollingAppApplication.class,
-        Jsr310JpaConverters.class
-})
+
+@SpringBootConfiguration(proxyBeanMethods = false)
+@EnableAutoConfiguration
 public class PollingAppApplication {
 
-    @PostConstruct
-    void init(){
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+    public static SpringApplication buildApp() {
+        return new SpringApplicationBuilder(PollingAppApplication.class)
+                .initializers((GenericApplicationContext context) -> {
+
+                    context.registerBean(PollController.class, () -> new PollController(context.getBean(PollService.class)));
+                    context.registerBean(PollService.class, PollService::new);
+
+
+                }).build();
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(PollingAppApplication.class, args);
+        buildApp().run(args);
     }
 
 }
